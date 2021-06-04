@@ -1,10 +1,11 @@
 import 'package:canteen_food_ordering_app/apis/foodAPIs.dart';
+import 'package:canteen_food_ordering_app/models/user.dart';
 import 'package:canteen_food_ordering_app/notifiers/authNotifier.dart';
 import 'package:canteen_food_ordering_app/screens/forgotPassword.dart';
 import 'package:canteen_food_ordering_app/screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen_food_ordering_app/models/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
@@ -15,25 +16,27 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  
+
   User _user = new User();
   bool isSignedIn = false, showPassword = true;
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     initializeCurrentUser(authNotifier, context);
     super.initState();
   }
 
-  void toast(String data){
+  void toast(String data) {
     Fluttertoast.showToast(
-      msg: data,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey,
-      textColor: Colors.white
-    );
+        msg: data,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white);
   }
 
   void _submitForm() {
@@ -41,11 +44,13 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     _formkey.currentState.save();
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    RegExp regExp = new RegExp(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
-    if(!regExp.hasMatch(_user.email)){
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    RegExp regExp = new RegExp(
+        r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$');
+    if (!regExp.hasMatch(_user.email)) {
       toast("Enter a valid Email ID");
-    } else if(_user.password.length < 8){
+    } else if (_user.password.length < 8) {
       toast("Password must have atleast 8 characters");
     } else {
       print("Success");
@@ -67,9 +72,9 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.white,
             border: Border.all(color: Color.fromRGBO(24, 142, 190, 1.0)),
             borderRadius: BorderRadius.circular(10),
-
           ),
           child: TextFormField(
+            controller: phoneController,
             keyboardType: TextInputType.phone,
             validator: (String value) {
               return null;
@@ -105,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: TextFormField(
+            controller: passwordController,
             obscureText: showPassword,
             validator: (String value) {
               return null;
@@ -116,16 +122,15 @@ class _LoginPageState extends State<LoginPage> {
             cursorColor: Color.fromRGBO(24, 142, 190, 1.0),
             decoration: InputDecoration(
               suffixIcon: IconButton(
-                icon: Icon(
-                  (showPassword) ? Icons.visibility_off : Icons.visibility,
-                  color: Color.fromRGBO(24, 142, 190, 1.0),
-                ), 
-                onPressed: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                }
-                ),
+                  icon: Icon(
+                    (showPassword) ? Icons.visibility_off : Icons.visibility,
+                    color: Color.fromRGBO(24, 142, 190, 1.0),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  }),
               border: InputBorder.none,
               hintText: 'Mot de passe',
               hintStyle: TextStyle(
@@ -144,8 +149,28 @@ class _LoginPageState extends State<LoginPage> {
         ),
         //LOGIN BUTTON
         GestureDetector(
-          onTap: () {
-            _submitForm();
+          onTap: () async {
+            print(phoneController.text);
+            print(passwordController.text);
+            await FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: '+225${phoneController.text.trim()}',
+              verificationCompleted: (AuthCredential credential) {
+                print('everything is ok ');
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {},
+              verificationFailed: (AuthException error) {
+                if (error.code == 'invalid-phone-number') {
+                  print('The provided phone number is not valid.');
+                } else {
+                  print(error.message.toString());
+                }
+              },
+              timeout: const Duration(seconds: 20),
+              // codeSent: (String verificationId, int forceResendingToken) {
+              //   print('code sent');
+              // },
+            );
+            // _submitForm();
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -203,40 +228,32 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: 10,
         ),
-        Row(
-            children: <Widget>[
-              Expanded(
-                  child: Divider(
-
-                    color: Color.fromRGBO(24, 142, 190, 1.0),
-                    indent: 10,
-                  )
+        Row(children: <Widget>[
+          Expanded(
+              child: Divider(
+            color: Color.fromRGBO(24, 142, 190, 1.0),
+            indent: 10,
+          )),
+          Container(
+            height: 20,
+            width: 30,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100.0),
+                color: Colors.deepOrange,
               ),
-
-              Container(
-                height: 20,
-                width: 30,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.0),
-                    color: Colors.deepOrange,
-                  ),
-                  child: Text(
-                    'OU',
-                    style: TextStyle(
-                        color: Colors.white),
-                  ),
-                ),
+              child: Text(
+                'OU',
+                style: TextStyle(color: Colors.white),
               ),
-
-              Expanded(
-                  child: Divider(
-                    color: Color.fromRGBO(24, 142, 190, 1.0),
-                    endIndent: 10,
-                  )
-              ),
-            ]
-        ),
+            ),
+          ),
+          Expanded(
+              child: Divider(
+            color: Color.fromRGBO(24, 142, 190, 1.0),
+            endIndent: 10,
+          )),
+        ]),
 
         // SignUp Line
         Row(
@@ -283,10 +300,9 @@ class _LoginPageState extends State<LoginPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image:  new AssetImage("images/logo_karah.png"),
-                fit: BoxFit.cover
-            ),
+          image: DecorationImage(
+              image: new AssetImage("images/logo_karah.png"),
+              fit: BoxFit.cover),
           /*gradient: LinearGradient(
             colors: [
               Color.fromRGBO(255, 255, 255, 1),
@@ -318,16 +334,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),*/
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Container(
                   width: 100.0,
                   height: 100.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image:  new AssetImage("images/logo_karah.png"),
-                          fit: BoxFit.cover
-                      )
-                  ),
+                          image: new AssetImage("images/logo_karah.png"),
+                          fit: BoxFit.cover)),
                 ),
                 Text(
                   'Connectez vous !',
@@ -335,7 +351,7 @@ class _LoginPageState extends State<LoginPage> {
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                      color: Color.fromRGBO(1, 70, 134, 1.0),
+                    color: Color.fromRGBO(1, 70, 134, 1.0),
                   ),
                 ),
                 Text(

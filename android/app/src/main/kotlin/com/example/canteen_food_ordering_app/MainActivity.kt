@@ -1,4 +1,4 @@
-package com.example.canteen_food_ordering_app
+package com.propulse.karah
 
 import io.flutter.embedding.android.FlutterActivity
 
