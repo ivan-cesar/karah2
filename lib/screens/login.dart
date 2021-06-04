@@ -3,11 +3,14 @@ import 'package:canteen_food_ordering_app/models/user.dart';
 import 'package:canteen_food_ordering_app/notifiers/authNotifier.dart';
 import 'package:canteen_food_ordering_app/screens/forgotPassword.dart';
 import 'package:canteen_food_ordering_app/screens/signup.dart';
+import 'package:commons/commons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
+import 'adminHome.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -156,12 +159,18 @@ class _LoginPageState extends State<LoginPage> {
               phoneNumber: '+225${phoneController.text.trim()}',
               verificationCompleted: (AuthCredential credential) {
                 print('everything is ok ');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminHomePage()),
+                );
+                // successDialog(context, "Tout est bien");
               },
               codeAutoRetrievalTimeout: (String verificationId) {},
               verificationFailed: (AuthException error) {
                 if (error.code == 'invalid-phone-number') {
                   print('The provided phone number is not valid.');
                 } else {
+                  errorDialog(context, "Error Message");
                   print(error.message.toString());
                 }
               },
