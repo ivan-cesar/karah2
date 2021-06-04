@@ -7,6 +7,7 @@ import 'package:canteen_food_ordering_app/screens/navigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'package:foodlab/api/food_api.dart';
 // import 'package:foodlab/screens/login_signup_page.dart';
 // import 'package:foodlab/notifier/auth_notifier.dart';
@@ -24,11 +25,6 @@ class _LandingPageState extends State<LandingPage> {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context, listen: false);
     initializeCurrentUser(authNotifier, context);
     super.initState();
-    final List<String> imgList = [
-       'Mozart',
-      'ivan',
-      'cesr'
-    ];
   }
 
   @override
@@ -57,16 +53,22 @@ class _LandingPageState extends State<LandingPage> {
         Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Image.asset(
-              'images/',
-              fit: BoxFit.contain,
+            Container(
+              width: 100.0,
+              height: 100.0,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image:  new AssetImage("images/logo_karah.png"),
+                      fit: BoxFit.cover
+                  )
+              ),
             ),
             SizedBox(width: 50,),
             GestureDetector(
               onTap: () {
                 (authNotifier.user == null)? Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (BuildContext context) {
-                      return LoginPage();
+                      return null;
                     })) :
                 (authNotifier.userDetails == null) ? print('wait') :
                 (authNotifier.userDetails.role == 'admin')?
@@ -99,15 +101,6 @@ class _LandingPageState extends State<LandingPage> {
           ],
         ),
             Text(
-              'Karah',
-              style: TextStyle(
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
-                color: Colors.yellow,
-                fontFamily: 'MuseoModerno',
-              ),
-            ),
-            Text(
               '',
               style: TextStyle(
                 fontStyle: FontStyle.italic,
@@ -116,8 +109,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ),
             SizedBox(
-                height:230,
-                //height: 200.0,
+                height:280,
                 width: double.infinity,
                 child: Carousel(
                   images: [
@@ -214,9 +206,9 @@ class _LandingPageState extends State<LandingPage> {
               'POWERD BY PROPULSE GROUP',
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
                 color: Color.fromRGBO(1, 70, 134, 1.0),
-                fontFamily: 'MuseoModerno',
+                //fontFamily: 'MuseoModerno',
               ),
             ),
           ],

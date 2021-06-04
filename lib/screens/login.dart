@@ -65,7 +65,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(40),
+            border: Border.all(color: Color.fromRGBO(24, 142, 190, 1.0)),
+            borderRadius: BorderRadius.circular(10),
 
           ),
           child: TextFormField(
@@ -74,17 +75,18 @@ class _LoginPageState extends State<LoginPage> {
               return null;
             },
             onSaved: (String value) {
-              _user.email = value;
+              _user.phone = value;
             },
             cursorColor: Color.fromRGBO(24, 142, 190, 1.0),
             decoration: InputDecoration(
+              border: InputBorder.none,
               hintText: 'Téléphone',
               hintStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(24, 142, 190, 1.0),
               ),
               icon: Icon(
-                Icons.phone_android,
+                Icons.phone,
                 color: Color.fromRGBO(24, 142, 190, 1.0),
               ),
             ),
@@ -99,7 +101,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(40),
+            border: Border.all(color: Color.fromRGBO(24, 142, 190, 1.0)),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: TextFormField(
             obscureText: showPassword,
@@ -139,6 +142,29 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: 20,
         ),
+        //LOGIN BUTTON
+        GestureDetector(
+          onTap: () {
+            _submitForm();
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(24, 142, 190, 1.0),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              "Connexion",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
         // Forgot Password Line
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -165,40 +191,53 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   'Mot de passe oublié?',
                   style: TextStyle(
-                      color: Colors.blueAccent,
+                      color: Color.fromRGBO(233, 106, 32, 1.0),
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             ),
           ],
         ),
+
         SizedBox(
-          height: 50,
+          height: 10,
         ),
-        //LOGIN BUTTON
-        GestureDetector(
-          onTap: () {
-            _submitForm();
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(24, 142, 190, 1.0),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Text(
-              "Connexion",
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
+        Row(
+            children: <Widget>[
+              Expanded(
+                  child: Divider(
+
+                    color: Color.fromRGBO(24, 142, 190, 1.0),
+                    indent: 10,
+                  )
               ),
-            ),
-          ),
+
+              Container(
+                height: 20,
+                width: 30,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.0),
+                    color: Colors.deepOrange,
+                  ),
+                  child: Text(
+                    'OU',
+                    style: TextStyle(
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+
+              Expanded(
+                  child: Divider(
+                    color: Color.fromRGBO(24, 142, 190, 1.0),
+                    endIndent: 10,
+                  )
+              ),
+            ]
         ),
-        SizedBox(
-          height: 60,
-        ),
+
         // SignUp Line
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(
-              width: 10,
+              height: 60,
             ),
             GestureDetector(
               onTap: () {
@@ -223,11 +262,11 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                 child: Text(
-                  'Inscrivez vous',
+                  'Créer un nouveau compte',
                   style: TextStyle(
                       color: Colors.blueAccent,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             ),
@@ -244,7 +283,11 @@ class _LoginPageState extends State<LoginPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+            image: DecorationImage(
+                image:  new AssetImage("images/logo_karah.png"),
+                fit: BoxFit.cover
+            ),
+          /*gradient: LinearGradient(
             colors: [
               Color.fromRGBO(255, 255, 255, 1),
               Color.fromRGBO(255, 255, 255, 1),
@@ -252,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-          ),
+          ),*/
         ),
         child: Form(
           key: _formkey,
@@ -261,7 +304,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
+                /*GestureDetector(
                   child: Container(
                     padding: EdgeInsets.only(top: 60),
                     child: Text(
@@ -274,13 +317,34 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                ),*/
+                SizedBox(height: 50,),
+                Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image:  new AssetImage("images/logo_karah.png"),
+                          fit: BoxFit.cover
+                      )
+                  ),
                 ),
                 Text(
-                  '',
+                  'Connectez vous !',
                   style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 17,
-                    color: Color.fromRGBO(252, 188, 126, 1),
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                      color: Color.fromRGBO(1, 70, 134, 1.0),
+                  ),
+                ),
+                Text(
+                  'Entrez avec vos identifiants pour \n créer, suivre ou annuler une commande.',
+                  style: TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: Color.fromRGBO(1, 70, 134, 1.0),
                   ),
                 ),
                 _buildLoginForm()
